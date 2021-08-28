@@ -509,6 +509,7 @@ interface Plugins {
   "memcached": plugins.memcached;
   "microgateway-core": plugins.microgateway_core;
   "mocha": plugins.mocha;
+  "moleculer": plugins.moleculer;
   "mongodb-core": plugins.mongodb_core;
   "mongoose": plugins.mongoose;
   "mysql": plugins.mysql;
@@ -1100,6 +1101,22 @@ declare namespace plugins {
    * [mocha](https://mochajs.org/) module.
    */
   interface mocha extends Integration {}
+
+  /**
+   * This plugin automatically instruments the
+   * [moleculer](https://moleculer.services/) module.
+   */
+   interface moleculer extends Instrumentation {
+    /**
+     * Configuration for Moleculer clients.
+     */
+    client?: Instrumentation,
+
+    /**
+     * Configuration for Moleculer servers.
+     */
+    server?: Instrumentation
+  }
 
   /**
    * This plugin automatically instruments the
