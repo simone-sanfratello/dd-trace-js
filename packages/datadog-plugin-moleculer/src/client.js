@@ -1,11 +1,16 @@
 'use strict'
 
+const { moleculerTags } = require('./util')
+
 function createWrapCall (tracer, config) {
   return function wrapCall (call) {
     return function callWithTrace (actionName, params, opts) {
       const options = {
         service: config.service,
-        resource: actionName
+        resource: actionName,
+        tags: {
+          'span.kind': 'client'
+        }
       }
 
       opts = arguments[2] = opts || {}
@@ -21,21 +26,13 @@ function createWrapCall (tracer, config) {
         const promise = call.apply(this, arguments)
 
         if (promise.ctx) {
-          const service = promise.ctx.service || {}
-          const action = promise.ctx.action || {}
           const endpoint = promise.ctx.endpoint || {}
           const node = endpoint.node || {}
 
           span.addTags({
-            'span.kind': 'client',
             'out.host': node.hostname,
             'out.port': node.port,
-            'moleculer.context.action': action.name,
-            'moleculer.context.node_id': promise.ctx.nodeID,
-            'moleculer.context.request_id': promise.ctx.requestID,
-            'moleculer.context.service': service.name,
-            'moleculer.namespace': this.namespace,
-            'moleculer.node_id': this.nodeID
+            ...moleculerTags(this, promise.ctx, config)
           })
         }
 

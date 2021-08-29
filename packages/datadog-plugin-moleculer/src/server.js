@@ -1,5 +1,7 @@
 'use strict'
 
+const { moleculerTags } = require('./util')
+
 function createWrapRegisterMiddlewares (tracer, config) {
   return function wrapRegisterMiddlewares (registerMiddlewares) {
     return function registerMiddlewaresWithTrace (userMiddlewares) {
@@ -21,20 +23,13 @@ function createMiddleware (tracer, config) {
 
       return function datadogMiddleware (ctx) {
         const childOf = tracer.extract('text_map', ctx.meta)
-        const service = ctx.service || {}
-        const action = ctx.action || {}
         const options = {
           service: config.service,
           resource: action.name,
           type: 'web',
           tags: {
             'span.kind': 'server',
-            'moleculer.context.action': action.name,
-            'moleculer.context.node_id': ctx.nodeID,
-            'moleculer.context.request_id': ctx.requestID,
-            'moleculer.context.service': service.name,
-            'moleculer.namespace': broker.namespace,
-            'moleculer.node_id': broker.nodeID
+            ...moleculerTags(broker, ctx, config)
           }
         }
 

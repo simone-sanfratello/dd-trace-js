@@ -708,6 +708,23 @@ declare namespace plugins {
     metadata?: string[] | ((variables: { [key: string]: any }) => { [key: string]: any });
   }
 
+  /** @hidden */
+  interface Moleculer extends Instrumentation {
+    /**
+     * Whether to include context meta as tags.
+     *
+     * @default false
+     */
+    meta?: boolean;
+
+    /**
+     * Whether to include context params as tags.
+     *
+     * @default false
+     */
+    params?: boolean;
+  }
+
   /**
    * This plugin automatically instruments the
    * [amqp10](https://github.com/noodlefrenzy/node-amqp10) module.
@@ -1106,16 +1123,18 @@ declare namespace plugins {
    * This plugin automatically instruments the
    * [moleculer](https://moleculer.services/) module.
    */
-   interface moleculer extends Instrumentation {
+   interface moleculer extends Moleculer {
     /**
-     * Configuration for Moleculer clients.
+     * Configuration for Moleculer clients. Set to false to disable client
+     * instrumentation.
      */
-    client?: Instrumentation,
+    client?: boolean | Moleculer;
 
     /**
-     * Configuration for Moleculer servers.
+     * Configuration for Moleculer servers. Set to false to disable server
+     * instrumentation.
      */
-    server?: Instrumentation
+    server?: boolean | Moleculer;
   }
 
   /**

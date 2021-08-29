@@ -164,6 +164,15 @@ const sharedbOptions = {
   },
 };
 
+const moleculerOptions = {
+  service: 'test',
+  client: false,
+  params: true,
+  server: {
+    meta: true
+  }
+}
+
 tracer.use('amqp10');
 tracer.use('amqplib');
 tracer.use('aws-sdk', awsSdkOptions);
@@ -217,6 +226,7 @@ tracer.use('limitd-client');
 tracer.use('memcached');
 tracer.use('microgateway-core', httpServerOptions);
 tracer.use('mocha');
+tracer.use('moleculer', moleculerOptions);
 tracer.use('mongodb-core');
 tracer.use('mongoose');
 tracer.use('mysql');
