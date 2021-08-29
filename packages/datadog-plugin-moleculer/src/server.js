@@ -17,6 +17,8 @@ function createMiddleware (tracer, config) {
     name: 'Datadog',
 
     localAction (next, action) {
+      const broker = this
+
       return function datadogMiddleware (ctx) {
         const childOf = tracer.extract('text_map', ctx.meta)
         const service = ctx.service || {}
@@ -27,10 +29,12 @@ function createMiddleware (tracer, config) {
           type: 'web',
           tags: {
             'span.kind': 'server',
-            'moleculer.service': service.name,
-            'moleculer.action': action.name,
-            'moleculer.request_id': ctx.requestID,
-            'moleculer.node_id': ctx.nodeID
+            'moleculer.context.action': action.name,
+            'moleculer.context.node_id': ctx.nodeID,
+            'moleculer.context.request_id': ctx.requestID,
+            'moleculer.context.service': service.name,
+            'moleculer.namespace': broker.namespace,
+            'moleculer.node_id': broker.nodeID
           }
         }
 
