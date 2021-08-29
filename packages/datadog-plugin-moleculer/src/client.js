@@ -22,10 +22,11 @@ function createWrapCall (tracer, config) {
         tracer.inject(span, 'text_map', opts.meta)
 
         const promise = call.apply(this, arguments)
-        const service = promise.ctx.service || {}
-        const action = promise.ctx.action || {}
 
         if (promise.ctx) {
+          const service = promise.ctx.service || {}
+          const action = promise.ctx.action || {}
+
           span.addTags({
             'moleculer.service': service.name,
             'moleculer.action': action.name,
