@@ -115,6 +115,4 @@ function patchResolveShorthands (prototype) {
     })
 }
 
-module.exports = [
-  DNSPlugin
-]
+module.exports = DNSPlugin
